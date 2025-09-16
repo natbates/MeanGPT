@@ -1,20 +1,19 @@
+import { useRef } from "react";
 import "../styles/chat.css";
-
 import ChatContent from "../components/chat-components/ChatContent";
 import ChatInformation from "../components/chat-components/ChatInformation";
 import ChatInput from "../components/chat-components/ChatInput";
-import ChatHistory from "../components/chat-components/ChatHistory";
 
 const Chat = () => {
-    
-    return(
+    const inputRef = useRef(null);
+
+    return (
         <div className="chat-container">
             <ChatInformation />
-            <ChatHistory />
-            <ChatContent />
-            <ChatInput />
+            <ChatContent onContentClick={() => inputRef.current && inputRef.current.focus()} />
+            <ChatInput ref={inputRef} />
         </div>
-    )
-}
+    );
+};
 
 export default Chat;

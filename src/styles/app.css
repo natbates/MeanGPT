@@ -9,6 +9,9 @@
 html
 {
     scroll-behavior: smooth;
+    background-color: black;
+    color: white;
+    font-family: "IBMPlexMono", monospace;
 }
 
 #root
@@ -19,7 +22,7 @@ html
 .page-container
 {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100%;
 }
 
@@ -34,7 +37,10 @@ html
 
 .page-wrapper
 {
-    
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-container
@@ -42,5 +48,25 @@ html
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 10px
+    padding: 10px;
+    height: 100vh;
+    min-height: 0; 
+}
+
+input, textarea
+{
+    font-family: inherit;
+}
+
+button{
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+}
+
+@font-face {
+    font-family: "IBMPlexMono";
+    src: url("../../public/fonts/IBMPlexMono-Regular.ttf") format("truetype");
 }
