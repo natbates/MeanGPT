@@ -1,0 +1,24 @@
+
+#chat-history
+{
+    height: 100%;
+    flex: 1;
+}
+
+#chat-input
+{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.text-input
+{
+    width: 100%;
+    height: 35px;
+}
+
+.submission-button
+{
+
+}

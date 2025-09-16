@@ -1,0 +1,46 @@
+
+*
+{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html
+{
+    scroll-behavior: smooth;
+}
+
+#root
+{
+    height: 100%;
+}
+
+.page-container
+{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.page-content
+{
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-height: 100vh;
+}
+
+.page-wrapper
+{
+    
+}
+
+.chat-container
+{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px
+}
