@@ -5,15 +5,18 @@ import "../../styles/chat.css";
 const ChatInput = forwardRef((props, ref) => {
     const [input, setInput] = useState("");
     const inputRef = useRef(null);
-    const { addMessageToActiveChat, botThinking } = useContext(ChatContext);
+
+    const { activeChat, addMessageToActiveChat, botThinking, createNewChat } =
+        useContext(ChatContext);
 
     useImperativeHandle(ref, () => ({
         focus: () => {
-            inputRef.current && inputRef.current.focus();
-        }
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        },
     }));
 
-    // Auto-grow textarea
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.style.height = "auto";
@@ -24,12 +27,26 @@ const ChatInput = forwardRef((props, ref) => {
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            if (!botThinking && input.trim() !== "") {
-                addMessageToActiveChat(input.trim());
+
+            // Determine if the bot is currently thinking in THIS active chat
+            const isBotThinking =
+                activeChat && botThinking.includes(activeChat.id);
+
+            if (!isBotThinking && input.trim() !== "") {
+                if (!activeChat) {
+                    // No active chat yet: create a new one with bot greeting and first user message
+                    createNewChat("Hey there! How can I assist you today?", input.trim());
+                } else {
+                    // Add the user message to the existing active chat
+                    addMessageToActiveChat(input.trim());
+                }
                 setInput("");
             }
         }
     };
+
+    const isBotThinkingInActiveChat =
+        activeChat && botThinking.includes(activeChat.id);
 
     return (
         <div id="chat-input">
@@ -41,8 +58,12 @@ const ChatInput = forwardRef((props, ref) => {
                 onKeyDown={handleKeyDown}
                 rows={1}
                 maxLength={255}
-                disabled={botThinking}
-                placeholder={botThinking ? "Bot is thinking..." : "Type your message..."}
+                disabled={isBotThinkingInActiveChat}
+                placeholder={
+                    isBotThinkingInActiveChat
+                        ? "Bot is thinking..."
+                        : "Type your message..."
+                }
             />
         </div>
     );

@@ -1,40 +1,93 @@
-import React, { createContext, useState, useRef, useEffect } from "react";
-
-const LOCAL_STORAGE_KEY = "meangpt_chats";
+import React, { createContext, useState, useEffect } from "react";
+export const LOCAL_STORAGE_KEY = "meangpt_chats";
+export const LAST_ACTIVE_CHAT_KEY = "last_active_chat_id";
 
 const getInitialChats = () => {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (stored) return JSON.parse(stored);
-    // Default mock data if nothing in storage
-    return [
-        {
-            id: Date.now().toString(),
-            title: "Welcome Chat",
-            createdAt: new Date().toISOString(),
-            lastMessaged: new Date().toISOString(),
-            logs: [
-                { sender: "bot", message: "Welcome to MeanGPT!", timestamp: new Date().toISOString() }
-            ]
-        }
-    ];
+    return [];
+};
+
+const generateId = () => {
+    return crypto.randomUUID(); 
 };
 
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
     const [chats, setChats] = useState(getInitialChats);
-    const [activeChat, setActiveChat] = useState(() => getInitialChats()[0]);
-    const [botThinking, setBotThinking] = useState(false);
-    const [thinkingDots, setThinkingDots] = useState(".");
-    const thinkingInterval = useRef(null);
+    const [activeChat, setActiveChat] = useState(null);
+    const [botThinking, setBotThinking] = useState([]); // array of chat IDs where bot is thinking
+    const [typingLogIds, setTypingLogIds] = useState([]); // array of log IDs that are currently being typed
+
+    // Restore last active chat on mount
+    useEffect(() => {
+        const lastActiveId = localStorage.getItem(LAST_ACTIVE_CHAT_KEY);
+        if (lastActiveId) {
+            const chat = chats.find(c => c.id === lastActiveId);
+            if (chat) setActiveChat(chat);
+        } else if (chats.length > 0) {
+            setActiveChat(chats[0]);
+        }
+    }, [chats]);
 
     // Persist chats to localStorage
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(chats));
     }, [chats]);
 
-    // Helper to create a new chat
-    const createNewChat = (firstMessage) => {
+    // Persist last active chat ID
+    useEffect(() => {
+        if (activeChat) {
+            localStorage.setItem(LAST_ACTIVE_CHAT_KEY, activeChat.id);
+        }
+    }, [activeChat]);
+
+    // ---------- ERROR LOGGING ----------
+    const addErrorToActiveChat = (message) => {
+        if (!activeChat) return;
+        const updated = chats.map(chat => {
+            if (chat.id === activeChat.id) {
+                return {
+                    ...chat,
+                    logs: [
+                        ...chat.logs,
+                        {
+                            id: generateId(),
+                            sender: "error",
+                            message,
+                            timestamp: new Date().toISOString()
+                        }
+                    ],
+                    lastMessaged: new Date().toISOString()
+                };
+            }
+            return chat;
+        });
+        setChats(updated);
+        setActiveChat(updated.find(c => c.id === activeChat.id));
+    };
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (botThinking.includes(activeChat?.id)) {
+                addErrorToActiveChat("Page was refreshed or closed.");
+            }
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [activeChat, chats]);
+
+    useEffect(() => {
+        const handleError = (event) => {
+            addErrorToActiveChat(`Runtime error: ${event.message}`);
+        };
+        window.addEventListener("error", handleError);
+        return () => window.removeEventListener("error", handleError);
+    }, [activeChat, chats]);
+    // -----------------------------------
+
+    const createNewChat = (firstMessage, userMessage) => {
         const now = new Date();
         const newChat = {
             id: now.getTime().toString(),
@@ -43,15 +96,56 @@ export const ChatProvider = ({ children }) => {
             lastMessaged: now.toISOString(),
             logs: [
                 {
-                    sender: "user",
+                    id: generateId(),
+                    sender: "bot",
                     message: firstMessage,
                     timestamp: now.toISOString()
-                }
+                },
+                ...(userMessage ? [{
+                    id: generateId(),
+                    sender: "user",
+                    message: userMessage,
+                    timestamp: now.toISOString()
+                }] : [])
             ]
         };
+
+        console.log("Before activeChat set:", activeChat);
         setChats(prev => [...prev, newChat]);
+        if (!userMessage) {
+            setTypingLogIds(prev => [...prev, newChat.logs[0].id]);
+        }
         setActiveChat(newChat);
-        simulateBotResponse([...chats, newChat], newChat);
+        console.log("New chat created:", newChat.id);
+
+        if (userMessage) simulateBotResponse(newChat);
+
+        return newChat;
+    };
+
+    useEffect(() => {
+        if (chats.length > 0) {
+            setActiveChat(chats[chats.length - 1]);
+        }
+    }, [chats]); 
+
+
+    const clearChats = () => {
+        setChats([]);
+        setActiveChat(null);
+        setBotThinking([]);
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        localStorage.removeItem(LAST_ACTIVE_CHAT_KEY);
+    };
+
+    const deleteChat = (chatId) => {
+        if (window.confirm("Are you sure you want to delete this chat? This action cannot be undone.")) {
+            setChats(prev => prev.filter(chat => chat.id !== chatId));
+            if (activeChat?.id === chatId) {
+                const remainingChats = chats.filter(chat => chat.id !== chatId);
+                setActiveChat(remainingChats.length > 0 ? remainingChats[0] : null);
+            }
+        }
     };
 
     const setActiveChatById = (id) => {
@@ -59,7 +153,6 @@ export const ChatProvider = ({ children }) => {
         if (chat) setActiveChat(chat);
     };
 
-    // Add message or create new chat if none active
     const addMessageToActiveChat = (message) => {
         if (!activeChat) {
             createNewChat(message);
@@ -72,6 +165,7 @@ export const ChatProvider = ({ children }) => {
                     logs: [
                         ...chat.logs,
                         {
+                            id: generateId(),
                             sender: "user",
                             message,
                             timestamp: new Date().toISOString()
@@ -84,76 +178,44 @@ export const ChatProvider = ({ children }) => {
         });
         setChats(updatedChats);
         setActiveChat(updatedChats.find(c => c.id === activeChat.id));
-        simulateBotResponse(updatedChats, updatedChats.find(c => c.id === activeChat.id));
+        simulateBotResponse(updatedChats.find(c => c.id === activeChat.id));
     };
 
-    // Bot thinking animation and response
-    const simulateBotResponse = (latestChats, latestActiveChat) => {
-        setBotThinking(true);
-        setThinkingDots(".");
-        let dotCount = 1;
-        const addOrUpdateThinking = () => {
-            setThinkingDots(".".repeat(dotCount));
-            setChats(prevChats =>
-                prevChats.map(chat => {
-                    if (chat.id === latestActiveChat.id) {
-                        let logs = [...chat.logs];
-                        if (logs.length && logs[logs.length - 1].sender === "bot" && logs[logs.length - 1].message.match(/^\.*$/)) {
-                            logs.pop();
-                        }
-                        logs.push({
-                            sender: "bot",
-                            message: ".".repeat(dotCount),
-                            timestamp: new Date().toISOString()
-                        });
-                        return { ...chat, logs };
-                    }
-                    return chat;
-                })
-            );
-        };
-
-        addOrUpdateThinking();
-
-        thinkingInterval.current = setInterval(() => {
-            dotCount = dotCount < 3 ? dotCount + 1 : 1;
-            addOrUpdateThinking();
-        }, 500);
-
+    const simulateBotResponse = (chatForResponse) => {
         setTimeout(() => {
-            clearInterval(thinkingInterval.current);
-            setThinkingDots("");
-            const response = "This is a bot response!";
-            setChats(prevChats => {
-                const updated = prevChats.map(chat => {
-                    if (chat.id === latestActiveChat.id) {
-                        let logs = [...chat.logs];
-                        if (
-                            logs.length &&
-                            logs[logs.length - 1].sender === "bot" &&
-                            logs[logs.length - 1].message.match(/^\.*$/)
-                        ) {
-                            logs.pop();
+            setBotThinking(prev => [...prev, chatForResponse.id]);
+            setTimeout(() => {
+                const response = "This is a bot response!";
+                setChats(prevChats => {
+                    const updated = prevChats.map(chat => {
+                        if (chat.id === chatForResponse.id) {
+                            return {
+                                ...chat,
+                                logs: [
+                                    ...chat.logs,
+                                    {
+                                        id: generateId(),
+                                        sender: "bot",
+                                        message: response,
+                                        timestamp: new Date().toISOString()
+                                    }
+                                ],
+                                lastMessaged: new Date().toISOString()
+                            };
                         }
-                        logs.push({
-                            sender: "bot",
-                            message: response,
-                            timestamp: new Date().toISOString()
-                        });
-                        return {
-                            ...chat,
-                            logs,
-                            lastMessaged: new Date().toISOString()
-                        };
-                    }
-                    return chat;
+                        return chat;
+                    });
+                    setActiveChat(updated.find(c => c.id === chatForResponse.id));
+
+                    const updatedChat = updated.find(c => c.id === chatForResponse.id);
+                    const newLastLogId = updatedChat.logs[updatedChat.logs.length - 1].id;
+
+                    setTypingLogIds(prev => [...prev, newLastLogId]);
+                    return updated;
                 });
-                // Set activeChat to the updated chat object
-                setActiveChat(updated.find(c => c.id === latestActiveChat.id));
-                return updated;
-            });
-            setBotThinking(false);
-        }, 5100);
+                setBotThinking(prev => prev.filter(id => id !== chatForResponse.id));
+            }, 51100);
+        }, 400);
     };
 
     return (
@@ -163,7 +225,12 @@ export const ChatProvider = ({ children }) => {
             setActiveChatById,
             addMessageToActiveChat,
             botThinking,
-            thinkingDots
+            createNewChat,
+            deleteChat,
+            clearChats,
+            addErrorToActiveChat,
+            typingLogIds,
+            setTypingLogIds
         }}>
             {children}
         </ChatContext.Provider>
