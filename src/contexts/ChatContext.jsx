@@ -214,7 +214,7 @@ export const ChatProvider = ({ children }) => {
                     return updated;
                 });
                 setBotThinking(prev => prev.filter(id => id !== chatForResponse.id));
-            }, 51100);
+            }, 50);
         }, 400);
     };
 

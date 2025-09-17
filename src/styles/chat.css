@@ -12,6 +12,7 @@
     flex-direction: column;
     gap: 5px;
     font-size: 1rem;
+    margin-top: 15px;
 }
 
 .chat-message.user
@@ -25,13 +26,22 @@
     font-weight: bold;
 }
 
-#chat-content
+.chat-content-container
 {
     display: flex;
     flex-direction: column;
     flex: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    justify-content: flex-end;
     margin-top: 20px;
+    padding-bottom: 30px;
+}
+
+#chat-content
+{
+    scroll-behavior: smooth;
+    overflow-y: scroll;
     justify-content: flex-end;
     gap: 20px;
     padding-bottom: 50px;

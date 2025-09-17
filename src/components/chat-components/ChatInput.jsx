@@ -16,6 +16,7 @@ const ChatInput = forwardRef((props, ref) => {
             }
         },
     }));
+    
 
     useEffect(() => {
         if (inputRef.current) {
@@ -47,6 +48,12 @@ const ChatInput = forwardRef((props, ref) => {
 
     const isBotThinkingInActiveChat =
         activeChat && botThinking.includes(activeChat.id);
+
+    useEffect(() => {
+        if (!isBotThinkingInActiveChat) {
+            inputRef.current?.focus();
+        }
+    }, [isBotThinkingInActiveChat]);
 
     return (
         <div id="chat-input">

@@ -15,10 +15,14 @@ const ChatContent = ({ onContentClick }) => {
     const intervalRef = useRef(null);
     const delayRef = useRef(null);
 
-    const [typingMessages, setTypingMessages] = useState({}); 
-    const [animatedMessages, setAnimatedMessages] = useState(new Set()); 
-    const [newBotLogIds, setNewBotLogIds] = useState([]); 
+    const [typingMessages, setTypingMessages] = useState({});
+    const [animatedMessages, setAnimatedMessages] = useState(new Set());
+    const [newBotLogIds, setNewBotLogIds] = useState([]);
 
+    // ✅ ref for the scrollable container
+    const chatContentRef = useRef(null);
+
+    // Typing animation for each message
     useEffect(() => {
         typingLogIds.forEach(logId => {
             // Skip if already typing
@@ -41,7 +45,7 @@ const ChatContent = ({ onContentClick }) => {
                     setNewBotLogIds(prev => [...prev, logId]);
                     setAnimatedMessages(prev => new Set(prev).add(logId));
                 }
-            }, 300); // typing speed (ms)
+            }, 30); // typing speed (ms)
         });
     }, [typingLogIds, activeChat, typingMessages, setTypingLogIds]);
 
@@ -77,13 +81,24 @@ const ChatContent = ({ onContentClick }) => {
         setAnimatedMessages(new Set());
     }, [activeChat?.id]);
 
+    // ✅ Scroll to bottom whenever logs or thinking indicator changes
+    useEffect(() => {
+        if (chatContentRef.current) {
+            chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+            // For smooth scroll:
+            // chatContentRef.current.scrollTo({ top: chatContentRef.current.scrollHeight, behavior: "smooth" });
+        }
+    }, [activeChat?.logs, showThinking]);
+
     if (!activeChat) {
         return (
-            <div id="chat-content" onClick={onContentClick}>
-                <div className="chat-message bot fly-down" style={{ animationDelay: "0s" }}>
-                    Hey there! How can I assist you today?
-                    <br />
-                    <small className="timestamp">{new Date().toLocaleTimeString()}</small>
+            <div className="chat-content-container">
+                <div id="chat-content" ref={chatContentRef} onClick={onContentClick}>
+                    <div className="chat-message bot fly-down" style={{ animationDelay: "0s" }}>
+                        Hey there! How can I assist you today?
+                        <br />
+                        <small className="timestamp">{new Date().toLocaleTimeString()}</small>
+                    </div>
                 </div>
             </div>
         );
@@ -92,43 +107,47 @@ const ChatContent = ({ onContentClick }) => {
     const totalMessages = activeChat.logs.length;
 
     return (
-        <div id="chat-content" onClick={onContentClick} key={activeChat.id}>
-            {activeChat.logs.map((log, idx) => {
-                const reverseIdx = totalMessages - idx - 1;
-                const delay = reverseIdx * 0.1;
+        <div className="chat-content-container" onClick={onContentClick}>
+            <div
+                id="chat-content"
+                ref={chatContentRef}
+                key={activeChat.id}
+            >
+                {activeChat.logs.map((log, idx) => {
+                    const reverseIdx = totalMessages - idx - 1;
+                    const delay = reverseIdx * 0.1;
 
-                const isTyping = typingLogIds.includes(log.id);
-                const typingText = typingMessages[log.id];
-                const hasAnimated = animatedMessages.has(log.id);
-                const shouldAnimate = !isTyping && !hasAnimated;
+                    const isTyping = typingLogIds.includes(log.id);
+                    const typingText = typingMessages[log.id];
+                    const hasAnimated = animatedMessages.has(log.id);
+                    const shouldAnimate = !isTyping && !hasAnimated;
 
-                return (
+                    return (
+                        <div
+                            key={log.id}
+                            className={`chat-message ${log.sender} ${shouldAnimate ? "fly-down" : ""} ${newBotLogIds.includes(log.id) || isTyping ? "full-opacity" : ""}`}
+                            style={{ animationDelay: `${delay}s` }}
+                        >
+                            {isTyping ? typingText || "" : log.message}
+                            <br />
+                            <small className="timestamp">
+                                {new Date(log.timestamp).toLocaleTimeString()}
+                            </small>
+                        </div>
+                    );
+                })}
+
+                {showThinking && (
                     <div
-                        key={log.id}
-                        className={`chat-message ${log.sender} ${shouldAnimate ? "fly-down" : ""} ${newBotLogIds.includes(log.id) || isTyping ? "full-opacity" : ""}`}
-                        style={{
-                            animationDelay: `${delay}s`
-                        }}
+                        className="chat-message bot fly-down"
+                        style={{ animationDelay: "0.1s" }}
                     >
-                        {isTyping ? typingText || "" : log.message}
+                        {thinkingDots}
                         <br />
-                        <small className="timestamp">
-                            {new Date(log.timestamp).toLocaleTimeString()}
-                        </small>
+                        <small className="timestamp">{new Date().toLocaleTimeString()}</small>
                     </div>
-                );
-            })}
-
-            {showThinking && (
-                <div
-                    className="chat-message bot fly-down"
-                    style={{ animationDelay: `${0.1}s` }}
-                >
-                    {thinkingDots}
-                    <br />
-                    <small className="timestamp">{new Date().toLocaleTimeString()}</small>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
