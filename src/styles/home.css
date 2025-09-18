@@ -1,0 +1,43 @@
+
+
+#home
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.home-text
+{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    text-align: start;
+    align-items: flex-start;
+}
+
+.share-button
+{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1rem;
+}
+
+.home-title
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.home-text button
+{
+    width: fit-content;
+    background-color: white;
+    color: black;
+    border-radius: 0px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}

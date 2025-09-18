@@ -13,6 +13,22 @@
     padding-left: 2px;
 }
 
+.nav-text:hover
+{
+    font-weight: bold;
+}
+
+.nav-bar:hover .nav-text {
+    opacity: 1;
+    width: auto;
+    margin-left: 12px;
+}
+
+.nav-bar:hover .chat-history
+{
+    display: flex;
+}
+
 .nav-bar:hover {
     width: 230px;
 }
@@ -31,11 +47,14 @@
 }
 
 .nav-icon {
-    font-size: 1.3em;
+    font-size: 0.5rem;
     min-width: 24px;
     text-align: center;
-    outline: 1px solid rgba(255, 255, 255, 0.337);
+    /* outline: 1px solid rgba(255, 255, 255, 0.337); */
     min-height: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 3px;
 }
 
 .nav-text {
@@ -47,16 +66,6 @@
     font-size: 0.8rem;
 }
 
-.nav-text:hover
-{
-    font-weight: bold;
-}
-
-.nav-bar:hover .nav-text {
-    opacity: 1;
-    width: auto;
-    margin-left: 12px;
-}
 
 .nav-bar.minimized .nav-text {
     opacity: 0;
@@ -71,18 +80,14 @@
     margin-left: 12px;
 }
 
-.chat-history {
-    width: 100%;
-    margin-top: 16px;
-}
-
 .nav-bar-top {
     flex: 1;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .nav-bar-bottom 
@@ -99,17 +104,28 @@
     cursor: pointer;
 }
 
+.chat-history-container
+{
+    flex: 1;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding: 12px;
+    width: 100%;
+    margin-top: 16px;
+    margin-bottom: 25px;
+}
 
 .chat-history
 {
-    flex: 1;
-    display: flex;
+    display: none;
+    height: 100%;
     flex-direction: column;
     gap: 10px;
     padding-top: 15px;
-    padding: 12px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    width: 100%;
+    margin-top: 15px;
+    padding-right: 2px;
 }
 
 .history-item
@@ -118,16 +134,45 @@
     font-size: 0.8rem;
     text-wrap: nowrap;
     text-overflow: ellipsis;
-    width: fit-content;
     opacity: 0;
     display: flex;
     gap: 5px;
     flex-direction: column;
     width: 100%;
     cursor: pointer;
+    transition: margin-left 0.2s ease-out;
 }
 
-.history-item:hover
+.history-item .chat-title
+{
+    font-size: 0.8rem;
+    margin: 0;
+    width: fit-content;
+}
+
+.history-item.active
+{
+    margin-left: 5px;
+}
+
+.history-item.active .chat-title
+{
+    border-bottom: 1px solid white;
+}
+
+.history-title
+{
+    margin-bottom: 12px;
+    font-size: 1rem;
+    font-weight: lighter;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    width: fit-content;
+    opacity: 0;
+    width: 100%;
+}
+
+.history-item:hover .chat-title
 {
     font-weight: bold;
 }
@@ -152,6 +197,11 @@
 .chat-history .history-item.fly-down {
     animation: flyDown 0.2s ease-out forwards;
 }
+
+.history-title.fly-down {
+    animation: flyDown 0.2s ease-out forwards;
+}
+
 
 @keyframes flyDown {
     from {

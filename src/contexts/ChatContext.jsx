@@ -23,11 +23,14 @@ export const ChatProvider = ({ children }) => {
     // Restore last active chat on mount
     useEffect(() => {
         const lastActiveId = localStorage.getItem(LAST_ACTIVE_CHAT_KEY);
-        if (lastActiveId) {
-            const chat = chats.find(c => c.id === lastActiveId);
-            if (chat) setActiveChat(chat);
-        } else if (chats.length > 0) {
-            setActiveChat(chats[0]);
+        if (!activeChat && chats.length > 0)
+        {
+            if (lastActiveId) {
+                const chat = chats.find(c => c.id === lastActiveId);
+                if (chat) setActiveChat(chat);
+            } else if (chats.length > 0) {
+                setActiveChat(chats[0]);
+            }
         }
     }, [chats]);
 
@@ -118,16 +121,16 @@ export const ChatProvider = ({ children }) => {
         setActiveChat(newChat);
         console.log("New chat created:", newChat.id);
 
-        if (userMessage) simulateBotResponse(newChat);
+        if (userMessage) fetchBotResponse(newChat);
 
         return newChat;
     };
 
     useEffect(() => {
-        if (chats.length > 0) {
+        if (!activeChat && chats.length > 0) {
             setActiveChat(chats[chats.length - 1]);
         }
-    }, [chats]); 
+    }, [chats, activeChat]);
 
 
     const clearChats = () => {
@@ -149,6 +152,12 @@ export const ChatProvider = ({ children }) => {
     };
 
     const setActiveChatById = (id) => {
+
+        if (id === null) {
+            setActiveChat(null);
+            return;
+        }
+
         const chat = chats.find(c => c.id === id);
         if (chat) setActiveChat(chat);
     };
@@ -178,45 +187,71 @@ export const ChatProvider = ({ children }) => {
         });
         setChats(updatedChats);
         setActiveChat(updatedChats.find(c => c.id === activeChat.id));
-        simulateBotResponse(updatedChats.find(c => c.id === activeChat.id));
+        fetchBotResponse(updatedChats.find(c => c.id === activeChat.id));
     };
 
-    const simulateBotResponse = (chatForResponse) => {
-        setTimeout(() => {
+    const fetchBotResponse = async (chatForResponse) => {
+        try {
+            // Mark bot as thinking
             setBotThinking(prev => [...prev, chatForResponse.id]);
-            setTimeout(() => {
-                const response = "This is a bot response!";
-                setChats(prevChats => {
-                    const updated = prevChats.map(chat => {
-                        if (chat.id === chatForResponse.id) {
-                            return {
-                                ...chat,
-                                logs: [
-                                    ...chat.logs,
-                                    {
-                                        id: generateId(),
-                                        sender: "bot",
-                                        message: response,
-                                        timestamp: new Date().toISOString()
-                                    }
-                                ],
-                                lastMessaged: new Date().toISOString()
-                            };
-                        }
-                        return chat;
-                    });
-                    setActiveChat(updated.find(c => c.id === chatForResponse.id));
 
-                    const updatedChat = updated.find(c => c.id === chatForResponse.id);
-                    const newLastLogId = updatedChat.logs[updatedChat.logs.length - 1].id;
+            // Send user's last message to your Flask backend
+            const userLastMessage = chatForResponse.logs[chatForResponse.logs.length - 1].message;
 
-                    setTypingLogIds(prev => [...prev, newLastLogId]);
-                    return updated;
+            const res = await fetch(process.env.REACT_APP_BOT_API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userLastMessage }),
+            });
+
+            if (!res.ok) {
+                addErrorToActiveChat("Failed to get response from bot");
+                throw new Error("Failed to get response from bot");
+            }
+
+            const data = await res.json();
+            const response = data.reply; // bot's reply from backend
+
+            // Update chat state with bot response
+            setChats(prevChats => {
+                const updated = prevChats.map(chat => {
+                    if (chat.id === chatForResponse.id) {
+                        return {
+                            ...chat,
+                            logs: [
+                                ...chat.logs,
+                                {
+                                    id: generateId(),
+                                    sender: "bot",
+                                    message: response,
+                                    timestamp: new Date().toISOString()
+                                }
+                            ],
+                            lastMessaged: new Date().toISOString()
+                        };
+                    }
+                    return chat;
                 });
-                setBotThinking(prev => prev.filter(id => id !== chatForResponse.id));
-            }, 50);
-        }, 400);
+
+                // Update active chat
+                const updatedChat = updated.find(c => c.id === chatForResponse.id);
+                setActiveChat(updatedChat);
+
+                // Add last bot message ID to typing logs
+                const newLastLogId = updatedChat.logs[updatedChat.logs.length - 1].id;
+                setTypingLogIds(prev => [...prev, newLastLogId]);
+
+                return updated;
+            });
+
+        } catch (error) {
+            console.error("Error fetching bot response:", error);
+        } finally {
+            // Remove bot thinking state
+            setBotThinking(prev => prev.filter(id => id !== chatForResponse.id));
+        }
     };
+
 
     return (
         <ChatContext.Provider value={{

@@ -2,7 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import { ChatContext } from "../../contexts/ChatContext";
 import "../../styles/chat.css";
 
-const ChatInformation = () => {
+const BOT_API_URL = "https://meangptwebservice.onrender.com/chat";
+
+const ChatInformation = ({isBotOnline}) => {
     const { activeChat, botThinking, deleteChat } = useContext(ChatContext);
     const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
@@ -20,14 +22,15 @@ const ChatInformation = () => {
         };
     }, []);
 
+
     if (!activeChat) {
         return (
             <div id="chat-information" className="chat-information one-line">
                 <p className="no-chat-selected">No chat selected.</p>
                 <span className="bot-status">
                     <p className="bot-text">Bot Status:{" "}</p>
-                    <span className={isOffline ? "offline" : "online"}>
-                        {isOffline ? "Offline" : "Online"}
+                    <span className={isBotOnline ? "online" : "offline"}>
+                        {isBotOnline ? "Online" : "Offline"}
                     </span>
                 </span>
             </div>
@@ -35,12 +38,13 @@ const ChatInformation = () => {
     }
 
     // Determine bot status:
-    //  - Offline if browser is offline
+    //  - Offline if browser is offline OR service is down
     //  - Thinking if botThinking contains active chat id
     //  - Otherwise Online
     let botStatus;
     let botStatusClass;
-    if (isOffline) {
+
+    if (isOffline || !isBotOnline) {
         botStatus = "Offline";
         botStatusClass = "offline";
     } else if (botThinking.includes(activeChat.id)) {
@@ -70,16 +74,15 @@ const ChatInformation = () => {
                     </p>
 
                     <div className="right-side-info">
+                        <span className="bot-status">
+                            <p className="bot-text">Bot Status:{" "}</p>
+                            <span className={botStatusClass}>{botStatus}</span>
+                        </span>
                         <span
                             onClick={() => deleteChat(activeChat.id)}
                             className="delete-chat"
                         >
                             <strong>Delete Chat</strong>
-                        </span>
-
-                        <span className="bot-status">
-                            <p className="bot-text">Bot Status:{" "}</p>
-                            <span className={botStatusClass}>{botStatus}</span>
                         </span>
                     </div>
                 </div>

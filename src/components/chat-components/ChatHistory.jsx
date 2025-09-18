@@ -35,24 +35,30 @@ const ChatHistory = () => {
   const sortedChats = [...chats].sort((a, b) => new Date(b.lastMessaged) - new Date(a.lastMessaged));
 
   return (
-    <div className="chat-history">
-      {sortedChats.map((chat, index) => (
-        <span 
-          key={chat.id}
-          onClick={() => goToChat(chat.id)}
-          style={{ animationDelay: animateIn ? `${index * 0.1}s` : '0s' }}
-          className={`history-item ${animateIn ? 'fly-down' : ''} ${chat.id === activeChat?.id ? 'active' : ''}`}
-        >
-          <p>
-            {chat.title || `Chat ${chat.id}`}
-          </p>
-          <p className='timestamp'>
-            <small className="dimmed" style={{ fontSize: '0.7rem' }}>
-              {new Date(chat.createdAt).toLocaleDateString()} {new Date(chat.createdAt).toLocaleTimeString()}
-            </small>
-          </p>
-        </span>
-      ))}
+    <div className='chat-history-container'>
+      <h4
+        className={`history-title ${animateIn ? 'fly-down' : ''}`}
+        style={{ animationDelay: '0.1s' }}
+      >Chat History</h4>
+      <div className="chat-history">
+        {sortedChats.map((chat, index) => (
+          <span 
+            key={chat.id}
+            onClick={() => goToChat(chat.id)}
+            style={{ animationDelay: animateIn ? `${index * 0.1 + 0.1}s` : '0s' }}
+            className={`history-item ${animateIn ? 'fly-down' : ''} ${chat.id === activeChat?.id ? 'active' : ''}`}
+          >
+            <p className='chat-title'>
+              {chat.title || `Chat ${chat.id}`}
+            </p>
+            <p className='timestamp'>
+              <small className="dimmed" style={{ fontSize: '0.7rem' }}>
+                {new Date(chat.createdAt).toLocaleDateString()} {new Date(chat.createdAt).toLocaleTimeString()}
+              </small>
+            </p>
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

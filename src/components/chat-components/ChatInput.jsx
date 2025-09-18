@@ -2,7 +2,7 @@ import { useState, forwardRef, useImperativeHandle, useRef, useContext, useEffec
 import { ChatContext } from "../../contexts/ChatContext";
 import "../../styles/chat.css";
 
-const ChatInput = forwardRef((props, ref) => {
+const ChatInput = forwardRef(({ isBotOnline, ref }) => {
     const [input, setInput] = useState("");
     const inputRef = useRef(null);
 
@@ -16,7 +16,6 @@ const ChatInput = forwardRef((props, ref) => {
             }
         },
     }));
-    
 
     useEffect(() => {
         if (inputRef.current) {
@@ -29,16 +28,14 @@ const ChatInput = forwardRef((props, ref) => {
         if (e.key === "Enter") {
             e.preventDefault();
 
-            // Determine if the bot is currently thinking in THIS active chat
             const isBotThinking =
                 activeChat && botThinking.includes(activeChat.id);
 
-            if (!isBotThinking && input.trim() !== "") {
+            // Only allow sending if bot is online and not thinking
+            if (!isBotThinking && isBotOnline && input.trim() !== "") {
                 if (!activeChat) {
-                    // No active chat yet: create a new one with bot greeting and first user message
                     createNewChat("Hey there! How can I assist you today?", input.trim());
                 } else {
-                    // Add the user message to the existing active chat
                     addMessageToActiveChat(input.trim());
                 }
                 setInput("");
@@ -50,10 +47,10 @@ const ChatInput = forwardRef((props, ref) => {
         activeChat && botThinking.includes(activeChat.id);
 
     useEffect(() => {
-        if (!isBotThinkingInActiveChat) {
+        if (!isBotThinkingInActiveChat && isBotOnline) {
             inputRef.current?.focus();
         }
-    }, [isBotThinkingInActiveChat]);
+    }, [isBotThinkingInActiveChat, isBotOnline]);
 
     return (
         <div id="chat-input">
@@ -65,11 +62,13 @@ const ChatInput = forwardRef((props, ref) => {
                 onKeyDown={handleKeyDown}
                 rows={1}
                 maxLength={255}
-                disabled={isBotThinkingInActiveChat}
+                disabled={isBotThinkingInActiveChat || !isBotOnline}
                 placeholder={
-                    isBotThinkingInActiveChat
+                    !isBotOnline
+                        ? "Bot is offline..."
+                        : isBotThinkingInActiveChat
                         ? "Bot is thinking..."
-                        : "Type your message..."
+                        : "Type your message... "
                 }
             />
         </div>

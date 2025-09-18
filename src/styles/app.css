@@ -24,6 +24,11 @@ html
     z-index: 1000;
 }
 
+.page
+{
+    padding: 40px;
+}
+
 #root
 {
     height: 100%;
@@ -51,6 +56,10 @@ html
     padding: 15px;
     display: flex;
     flex-direction: column;
+}
+
+a{
+    color: rgb(144, 202, 249);
 }
 
 .chat-container
