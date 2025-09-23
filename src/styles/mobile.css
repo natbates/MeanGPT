@@ -3,7 +3,7 @@
     
     .version
     {
-        display: none;
+        right: 15px !important;
     }
 
     .page-container
@@ -11,45 +11,38 @@
         flex-direction: column;
     }
 
-    .desktop
+    .footer
     {
-        display: none;
+        padding-left: 15px;
+    }
+
+    .page-wrapper
+    {
+        padding-left: 56px !important;
+    }
+
+    .dropdown-menu
+    {
+        width: 100%;
+        background-color: black;
     }
 
     .nav-bar
     {
+        background-color: black;
+        z-index: 20;
         gap: 0px !important;
-        width: 100dvw;
-        height: fit-content;
-        flex-direction: row;
-        border-right: none !important;
-        border-bottom: 1px solid #ffffff !important;
+        position: absolute;
+        overflow: none;
         padding-top: 5px;
         padding-bottom: 5px;
-        transition: height 0.3s cubic-bezier(.4,2,.6,1) !important;
+        transition: width 0.3s cubic-bezier(.4,2,.6,1) !important;
     }
 
     .nav-items
     {
         width: 100%;
-        height: 100%;
         justify-content: space-between;
-    }
-
-    .nav-bar-top
-    {
-        flex-direction: column;
-
-    }
-
-    .nav-items-spacer
-    {
-        flex-direction: row;
-    }
-
-    .nav-items
-    {
-        flex-direction: row !important;
     }
 
     .nav-button
@@ -57,10 +50,6 @@
         width: fit-content;
     }
 
-    .nav-text
-    {
-        display: none;
-    }
 
     .nav-bar .mobile
     {
@@ -101,14 +90,9 @@
         width: fit-content;
     }
 
-    .footer
-    {
-        display: none;
-    }
-
     #chat-input
     {
-        margin-bottom: 80px;
+        margin-bottom: 50px;
     }
 
     .chat-content-container
@@ -125,11 +109,12 @@
     }
 
 
-    .nav-bar:hover{
-        width: 100dvw !important;
+}
+
+
+@media (max-width: 600px) {
+    .footer-extra
+    {
+        display: none;
     }
-
-    
-
-
 }

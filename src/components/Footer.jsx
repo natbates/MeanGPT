@@ -5,8 +5,11 @@ const Footer = () => {
     return (
         <footer className="footer">
             <p>
-                © {year} MeanGPT &nbsp;|&nbsp; Not affiliated with OpenAI &nbsp;|&nbsp; 
-                <a href="/terms" style={{ color: "#90caf9" }}>Please read TOC</a>
+                © {year} MeanGPT  
+                <span className="footer-extra">
+                    &nbsp;| Not affiliated with OpenAI&nbsp;|&nbsp; 
+                    <a href="/terms" style={{ color: "#90caf9" }}>Please read TOC</a>
+                </span>
             </p>
         </footer>
     );

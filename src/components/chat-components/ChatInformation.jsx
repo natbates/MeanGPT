@@ -75,7 +75,7 @@ const ChatInformation = ({isBotOnline}) => {
 
                     <div className="right-side-info">
                         <span className="bot-status">
-                            <p className="bot-text">Bot Status:{" "}</p>
+                            <p className="bot-text">Status:{" "}</p>
                             <span className={botStatusClass}>{botStatus}</span>
                         </span>
                         <span

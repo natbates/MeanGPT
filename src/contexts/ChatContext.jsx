@@ -192,11 +192,10 @@ export const ChatProvider = ({ children }) => {
 
     const fetchBotResponse = async (chatForResponse) => {
         try {
-            // Mark bot as thinking
-            setBotThinking(prev => [...prev, chatForResponse.id]);
+            // Mark bot as thinking after time out
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // simulate thinking time
-            await new Promise(resolve => setTimeout(resolve, 10000));
+            setBotThinking(prev => [...prev, chatForResponse.id]);
 
             // Send user's last message to your Flask backend
             const userLastMessage = chatForResponse.logs[chatForResponse.logs.length - 1].message;
@@ -213,7 +212,7 @@ export const ChatProvider = ({ children }) => {
             }
 
             const data = await res.json();
-            const response = data.reply; // bot's reply from backend
+            const response = data.response; // bot's reply from backend
 
             // Update chat state with bot response
             setChats(prevChats => {

@@ -60,7 +60,7 @@ const ChatContent = ({ onContentClick }) => {
                     dotCount = dotCount < 3 ? dotCount + 1 : 1;
                     setThinkingDots(".".repeat(dotCount));
                 }, 500);
-            }, 400);
+            }, 0);
         } else {
             setShowThinking(false);
             setThinkingDots(".");
@@ -130,9 +130,12 @@ const ChatContent = ({ onContentClick }) => {
                         >
                             {isTyping ? typingText || "" : log.message}
                             <br />
-                            <small className="timestamp">
-                                {new Date(log.timestamp).toLocaleTimeString()}
-                            </small>
+                            <span className="under-text">
+                                <small className="timestamp">
+                                    {new Date(log.timestamp).toLocaleTimeString()}
+                                </small>
+                                {log.sender === "error" && <img className="retry-img" src = "../images/icons/retry.svg"></img>}
+                            </span>
                         </div>
                     );
                 })}
@@ -140,7 +143,7 @@ const ChatContent = ({ onContentClick }) => {
                 {showThinking && (
                     <div
                         className="chat-message bot fly-down"
-                        style={{ animationDelay: "0.1s" }}
+                        style={{ animationDelay: "0s" }}
                     >
                         {thinkingDots}
                         <br />

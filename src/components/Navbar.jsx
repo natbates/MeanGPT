@@ -63,37 +63,15 @@ const NavBar = () => {
                                 <span className="nav-text">{item.name}</span>
                             </button>
                         ))}
-                    </div>
-                    <div className="mobile">
-                        <button
-                            className="nav-button"
-                            onClick={() => setDropdownOpen(!dropdownOpen)}
-                        >
-                            ️
-                            <img
-                                src="/images/icons/drop-down.png"
-                                alt="drop-down"
-                                className="nav-icon"
-                            />
-                        </button>
-                    </div>
-                            
+                    </div>   
                 </div>
-                
-                {dropdownOpen && (
-                    <div className="dropdown-menu mobile">
-                        <ChatHistory />
-                    </div>
-                )}
 
-                {!dropdownOpen &&
-                    <div className="desktop">
-                        <ChatHistory />
-                    </div>
-                }
+                <ChatHistory />
+
             </div>
 
             <div className="nav-bar-bottom">
+                <span className="nav-text" onClick={() => navigate("/terms")}>TOC</span>
                 <span className="nav-text" onClick={() => navigate("/settings")}>Settings</span>
                 <span onClick={handleClearChats} className="nav-text">
                     Clear Chats

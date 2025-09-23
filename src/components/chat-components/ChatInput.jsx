@@ -2,7 +2,7 @@ import { useState, forwardRef, useImperativeHandle, useRef, useContext, useEffec
 import { ChatContext } from "../../contexts/ChatContext";
 import "../../styles/chat.css";
 
-const ChatInput = forwardRef(({ isBotOnline, ref }) => {
+const ChatInput = forwardRef(({ isBotOnline }, ref) => {
     const [input, setInput] = useState("");
     const inputRef = useRef(null);
 
