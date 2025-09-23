@@ -14,6 +14,8 @@ import Support from "../pages/boring/Support";
 import Settings from "../pages/boring/Settings";
 import Terms from "../pages/boring/Terms";
 
+import "../styles/mobile.css";
+
 const App = () => {
 
     return (

@@ -11,11 +11,31 @@
     padding-top: 18px;
     gap: 10px;
     padding-left: 2px;
+    padding-right: 2px;
+    box-sizing: border-box;
 }
 
 .nav-text:hover
 {
     font-weight: bold;
+}
+
+.nav-items-spacer
+{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.nav-items
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-items .mobile
+{
+    display: none;
 }
 
 .nav-bar:hover .nav-text {

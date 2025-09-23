@@ -12,6 +12,9 @@ html
     background-color: black;
     color: white;
     font-family: "IBMPlexMono", monospace;
+    width: 100dvw;
+    height: 100dvh;
+    overflow: hidden;
 }
 
 .version

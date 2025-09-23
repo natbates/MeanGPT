@@ -195,6 +195,9 @@ export const ChatProvider = ({ children }) => {
             // Mark bot as thinking
             setBotThinking(prev => [...prev, chatForResponse.id]);
 
+            // simulate thinking time
+            await new Promise(resolve => setTimeout(resolve, 10000));
+
             // Send user's last message to your Flask backend
             const userLastMessage = chatForResponse.logs[chatForResponse.logs.length - 1].message;
 

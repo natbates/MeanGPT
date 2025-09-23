@@ -4,6 +4,7 @@
 {
     padding-bottom: 30px;
     border-bottom: 1px solid #e0e0e05f;
+    position: relative;
 }
 
 .chat-message
@@ -170,7 +171,6 @@
 
 .chat-message {
     opacity: 0;
-    transform: translateY(-20px);
 }
 
 .chat-message.fly-down {

@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatHistory from "./chat-components/ChatHistory";
 import { ChatContext } from "../contexts/ChatContext";
 import "../styles/nav.css";
 
 // Define your nav items as an array of objects
-const navItems = (navigate, createNewChat, alertSearch) => [
+const navItems = (navigate, createNewChat) => [
     {
         key: "home",
         title: "Home",
@@ -32,6 +32,7 @@ const navItems = (navigate, createNewChat, alertSearch) => [
 const NavBar = () => {
     const navigate = useNavigate();
     const { createNewChat, clearChats } = useContext(ChatContext);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleClearChats = () => {
         if (
@@ -43,29 +44,53 @@ const NavBar = () => {
         }
     };
 
-    const handleSearch = () => {
-        alert("Search Chats clicked!");
-    };
-
     return (
         <nav className="nav-bar">
             <div className="nav-bar-top">
-                {navItems(navigate, createNewChat, handleSearch).map((item) => (
-                    <button
-                        key={item.key}
-                        className="nav-button"
-                        onClick={item.onClick}
-                    >
-                        <img
-                            src={item.imgUrl}
-                            alt={item.title}
-                            className="nav-icon"
-                        />
-                        <span className="nav-text">{item.name}</span>
-                    </button>
-                ))}
+                <div className="nav-items">
+                    <div className="nav-items-spacer">
+                        {navItems(navigate, createNewChat).map((item) => (
+                            <button
+                                key={item.key}
+                                className="nav-button"
+                                onClick={item.onClick}
+                            >
+                                <img
+                                    src={item.imgUrl}
+                                    alt={item.title}
+                                    className="nav-icon"
+                                />
+                                <span className="nav-text">{item.name}</span>
+                            </button>
+                        ))}
+                    </div>
+                    <div className="mobile">
+                        <button
+                            className="nav-button"
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                        >
+                            ️
+                            <img
+                                src="/images/icons/drop-down.png"
+                                alt="drop-down"
+                                className="nav-icon"
+                            />
+                        </button>
+                    </div>
+                            
+                </div>
+                
+                {dropdownOpen && (
+                    <div className="dropdown-menu mobile">
+                        <ChatHistory />
+                    </div>
+                )}
 
-                <ChatHistory />
+                {!dropdownOpen &&
+                    <div className="desktop">
+                        <ChatHistory />
+                    </div>
+                }
             </div>
 
             <div className="nav-bar-bottom">
@@ -74,6 +99,8 @@ const NavBar = () => {
                     Clear Chats
                 </span>
             </div>
+
+
         </nav>
     );
 };
