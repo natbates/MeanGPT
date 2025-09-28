@@ -10,7 +10,7 @@ const navItems = (navigate, createNewChat, setMobileOpen) => [
     title: "Home",
     name: "Home",
     imgUrl: "/images/icons/face-icon.png",
-    onClick: () => navigate("/"),
+    onClick: (e) =>{e.stopPropagation(); setMobileOpen(false); navigate("/")},
     path: "/"
   },
   {
@@ -30,7 +30,7 @@ const navItems = (navigate, createNewChat, setMobileOpen) => [
     title: "Help",
     name: "Help",
     imgUrl: "/images/icons/help.png",
-    onClick: () => navigate("/support"),
+    onClick: () => {e.stopPropagation(); setMobileOpen(false); navigate("/support")},
     path: "/support"
   }
 ];
