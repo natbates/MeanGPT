@@ -1,4 +1,3 @@
-// components/MrMeanieBot.jsx
 import { useEffect, useState, useRef, useContext } from "react";
 import "../styles/home.css";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,7 @@ const MrMeanieBot = ({
     typingSpeed = 50,
     pauseAfter = 4000,
     reverse = false,
-    initialDelay = 0, // new prop
+    initialDelay = 0,
 }) => {
     const lines = mode === "insult" ? defaultInsults : defaultAdvice;
 
@@ -70,7 +69,7 @@ const MrMeanieBot = ({
             typeLine(lines[firstIndex]);
         };
 
-        const delayTimer = setTimeout(startBot, initialDelay); // apply initial delay
+        const delayTimer = setTimeout(startBot, initialDelay); 
 
         return () => {
             clearTimeout(delayTimer);
@@ -131,7 +130,6 @@ const Home = () => {
                                 console.error("Error sharing:", err);
                             }
                             } else {
-                            // Fallback: copy URL to clipboard
                             try {
                                 await navigator.clipboard.writeText(shareData.url);
                                 alert("Link copied to clipboard!");

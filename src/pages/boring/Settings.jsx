@@ -3,7 +3,6 @@ import "../../styles/boring.css";
 import { objectsEqual } from "../../utils/util";
 import { defaultOptions } from "../../utils/default";
 
-// Option metadata for rendering inputs
 const optionMeta = {
   model: { type: "select", options: ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"] },
   reply_length: { type: "select", options: ["short", "medium", "long"] },
@@ -21,7 +20,6 @@ const CustomSelect = ({ label, value, options, onChange }) => {
     setOpen(false);
   };
 
-  // Close dropdown if clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
@@ -67,7 +65,6 @@ const Settings = () => {
   const [options, setOptions] = useState(defaultOptions);
   const [changedOptions, setChangedOptions] = useState(defaultOptions);
 
-  // Load options from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("options");
     if (stored) {

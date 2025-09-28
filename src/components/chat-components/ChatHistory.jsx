@@ -16,7 +16,6 @@ const ChatHistory = ({ mobileOpen }) => {
     setActiveChatById(chatId);
   };
 
-  // Hover-based animation
   useEffect(() => {
     const navBar = document.querySelector('.nav-bar');
     if (!navBar) return;
@@ -34,7 +33,6 @@ const ChatHistory = ({ mobileOpen }) => {
   }, []);
 
 
-  // Sort chats by lastMessaged (descending)
   const sortedChats = [...chats].sort((a, b) => new Date(b.lastMessaged) - new Date(a.lastMessaged));
   const animateIn = hovering || mobileOpen;
 

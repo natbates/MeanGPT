@@ -11,7 +11,7 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
     typingLogIds,
     setTypingLogIds,
     chats,
-    fetchBotResponse, // ✅ get from context
+    fetchBotResponse, 
   } = useContext(ChatContext);
 
   const [showThinking, setShowThinking] = useState(false);
@@ -24,7 +24,6 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
   const [newBotLogIds, setNewBotLogIds] = useState([]);
   const chatContentRef = useRef(null);
 
-  // Typing animation
   useEffect(() => {
     typingLogIds.forEach((logId) => {
         if (typingMessages[logId]) return;
@@ -34,11 +33,10 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
 
         let index = 0;
 
-        // Read reply_speed directly from localStorage
         const storedOptions = localStorage.getItem("options");
         const replySpeed = storedOptions ? JSON.parse(storedOptions).reply_speed || 1 : 1;
 
-        const intervalDelay = 30 * replySpeed; // scales typing speed
+        const intervalDelay = 30 * replySpeed;
 
         const interval = setInterval(() => {
         index++;
@@ -57,7 +55,6 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
     });
   }, [typingLogIds, activeChat, typingMessages, setTypingLogIds]);
 
-  // Thinking dots animation
   useEffect(() => {
     if (activeChat && botThinking.includes(activeChat.id)) {
       delayRef.current = setTimeout(() => {
@@ -82,14 +79,12 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
     };
   }, [botThinking, activeChat]);
 
-  // Reset typing & animation when switching chats
   useEffect(() => {
     setTypingMessages({});
     setNewBotLogIds([]);
     setAnimatedMessages(new Set());
   }, [activeChat?.id]);
 
-  // Scroll to bottom
   useEffect(() => {
     if (chatContentRef.current) {
       chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
@@ -129,7 +124,6 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
   const handleRetry = (errorLogId) => {
     if (!activeChat) return;
 
-    // Remove the error log from the chat
     const updatedLogs = activeChat.logs.filter((log) => log.id !== errorLogId);
 
     const updatedChats = chats.map((chat) =>
@@ -140,7 +134,6 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
 
     const updatedChat = updatedChats.find((c) => c.id === activeChat.id);
 
-    // Find the last user message to retry bot response
     const lastUserMessage = updatedChat.logs
         .filter((l) => l.sender === "user")
         .slice(-1)[0]?.message;
@@ -149,7 +142,7 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
     console.log("IUSERS LAST MESSAGE, ", lastUserMessage)
 
     if (lastUserMessage) {
-        fetchBotResponse(updatedChat); // triggers bot to reply again
+        fetchBotResponse(updatedChat); 
     }
   };
 
@@ -185,7 +178,7 @@ const ChatContent = ({ onContentClick, firstMessageForUnselected }) => {
                     src="../images/icons/retry.svg"
                     alt="retry"
                     style={{ cursor: "pointer" }}
-                    onClick={() => handleRetry(log.id)} // ✅ calls context
+                    onClick={() => handleRetry(log.id)} 
                   />
                 )}
               </span>

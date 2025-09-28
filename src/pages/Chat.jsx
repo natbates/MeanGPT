@@ -22,10 +22,7 @@ const Chat = () => {
             }
         };
 
-        // Initial check
         checkService();
-
-        // Check every 10 seconds
         const interval = setInterval(checkService, 10000);
 
         return () => clearInterval(interval);

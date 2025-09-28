@@ -23,7 +23,6 @@ export const ChatProvider = ({ children }) => {
     const [botThinking, setBotThinking] = useState([]);
     const [typingLogIds, setTypingLogIds] = useState([]);
 
-    // Restore last active chat
     useEffect(() => {
         const lastActiveId = localStorage.getItem(LAST_ACTIVE_CHAT_KEY);
         if (!activeChat && chats.length > 0 && window.location.pathname === "/chat") {
@@ -32,11 +31,9 @@ export const ChatProvider = ({ children }) => {
         }
     }, [chats]);
 
-    // Persist chats & last active chat
     useEffect(() => localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(chats)), [chats]);
     useEffect(() => { if (activeChat) localStorage.setItem(LAST_ACTIVE_CHAT_KEY, activeChat.id); }, [activeChat]);
 
-    // Error logging
     const addErrorToActiveChat = (message) => {
         if (!activeChat) return;
         const updated = chats.map(chat => chat.id === activeChat.id ? {
@@ -111,7 +108,7 @@ export const ChatProvider = ({ children }) => {
         setActiveChat(currentChat);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedChats));
 
-        fetchBotResponse(currentChat, isFinalReply); // pass finalMessage flag
+        fetchBotResponse(currentChat, isFinalReply); 
     };
 
     // ---------- Bot response ----------
@@ -159,7 +156,7 @@ export const ChatProvider = ({ children }) => {
                 setTypingLogIds(prev => [
                     ...prev,
                     updatedChat.logs.slice(-1)[0].id
-                ]); // triggers typing animation
+                ]); 
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
                 return updated;
             });
@@ -210,7 +207,6 @@ export const ChatProvider = ({ children }) => {
         } catch (err) {
             console.error(err);
 
-            // ✅ Always append an error message from the bot if request failed
             setChats(prevChats => {
                 const updated = prevChats.map(chat => {
                     if (chat.id === chatForResponse.id) {
@@ -218,7 +214,7 @@ export const ChatProvider = ({ children }) => {
                             ...chat.logs,
                             {
                                 id: generateId(),
-                                sender: "error", // your UI can style/retry this
+                                sender: "error", 
                                 message: "Bot failed to reply. Please try again.",
                                 timestamp: new Date().toISOString()
                             }
@@ -234,12 +230,9 @@ export const ChatProvider = ({ children }) => {
                 return updated;
             });
         } finally {
-            // ✅ stop “bot is thinking…” indicator
             setBotThinking(prev => prev.filter(id => id !== chatForResponse.id));
         }
     };
-
-
 
     // ---------- Other operations ----------
     const clearChats = () => {

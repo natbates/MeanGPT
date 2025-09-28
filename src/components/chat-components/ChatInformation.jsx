@@ -9,7 +9,6 @@ const ChatInformation = ({isBotOnline}) => {
     const { activeChat, botThinking, deleteChat } = useContext(ChatContext);
     const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-    // Update isOffline whenever the network status changes
     useEffect(() => {
         const handleOnline = () => setIsOffline(false);
         const handleOffline = () => setIsOffline(true);
@@ -38,10 +37,6 @@ const ChatInformation = ({isBotOnline}) => {
         );
     }
 
-    // Determine bot status:
-    //  - Offline if browser is offline OR service is down
-    //  - Thinking if botThinking contains active chat id
-    //  - Otherwise Online
     let botStatus;
     let botStatusClass;
 
