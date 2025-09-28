@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ChatContext } from "../../contexts/ChatContext";
 import "../../styles/chat.css";
+import { maxAmountOfReplies } from "../../utils/default";
 
 const BOT_API_URL = "https://meangptwebservice.onrender.com/chat";
 
@@ -78,6 +79,7 @@ const ChatInformation = ({isBotOnline}) => {
                             <p className="bot-text">Status:{" "}</p>
                             <span className={botStatusClass}>{botStatus}</span>
                         </span>
+                        <p className="chats-remaining">{maxAmountOfReplies - activeChat?.logs?.length} replies left</p>
                         <span
                             onClick={() => deleteChat(activeChat.id)}
                             className="delete-chat"

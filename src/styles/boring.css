@@ -1,0 +1,293 @@
+
+
+#settings .option input
+{
+    margin-left: 30px;
+}
+
+#settings p
+{
+    margin-top: 20px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+#settings .option 
+{
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    min-height: 35px;
+}
+
+.option label
+{
+    display: flex;
+    align-items: center;
+}
+
+#settings select{
+  color: white;
+  position: relative;
+  padding: 5px 10px;
+  background: transparent;
+  padding-right: 0px;
+  margin-left: 15px;
+  border-radius: 0;  /* square edges */
+  outline: 1px solid rgba(255, 255, 255, 0.163);
+  cursor: pointer;
+}
+
+#settings .button-group
+{
+    display: flex;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+#settings .button-group button
+{
+    font-size: 0.8rem;
+    outline: 1px solid white;
+    padding: 4px 9px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+#settings .button-group button.active
+{
+    opacity: 1;
+}
+
+
+#settings input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 200px; /* slider length */
+  height: 10px; /* track height */
+  margin-right: 20px;
+  background: #1c1c1c; /* track color */
+  border-radius: 0;  /* square edges */
+  outline: none;
+  cursor: pointer;
+}
+
+#settings input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;  
+  height: 16px;
+  background: #ffffff; 
+  border-radius: 0; 
+  cursor: pointer;
+}
+
+#settings input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #555;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+#settings input[type="range"]::-moz-range-track {
+  background: #ccc;
+  height: 16px;
+  border-radius: 0;
+}
+
+#settings input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 14px;
+  height: 14px;
+  margin-left: 20px !important;
+
+  outline: 1px solid white;
+  outline-offset: 2px;
+  border-radius: 0;          
+  background: transparent;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+#settings input[type="checkbox"]:checked {
+  background: white;
+}
+
+
+.settings-list
+{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.button-container
+{
+    display: flex;
+    gap: 20px;
+    padding-top: 20px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.button-container button
+{
+    outline: 1px solid white;
+    padding: 5px 15px;
+    font-size: 0.8rem;
+}
+
+#terms section
+{
+    margin-top: 40px;
+}
+
+#terms section h2
+{
+    font-size: 1rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+#terms p, #support p, #dev-blog p
+{
+    margin-top: 20px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.blog-section
+{
+    outline: 1px solid rgba(255, 255, 255, 0.243);
+    padding: 10px 15px;
+}
+
+.blog-section h2
+{
+    margin-bottom: 10px;
+}
+
+.blog-date
+{
+    opacity: 0.6;
+    font-size: 0.7rem;
+}
+
+.blog-text {
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.blog-text
+{
+    font-size: 0.7rem !important;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.blog-section .read-more
+{
+    font-size: 0.7rem;
+    margin-top: 10px;
+}
+
+.blogs
+{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+#terms section p
+{
+    font-size: 0.7rem !important;
+    opacity: 0.5;
+}
+
+#support form
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 40px;
+    margin-top: 50px;
+    max-width: 600px;
+}
+
+#support form label
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#support textarea, #support input{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.467);
+    padding: 5px;
+    padding-bottom: 8px !important;
+}
+
+
+#support form textarea
+{
+    height: 150px;
+}
+
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.custom-select-box {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+  font-size: 0.8rem;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.885);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.custom-select-options li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.custom-select-options li:hover,
+.custom-select-options li.selected {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.arrow {
+  margin-left: 10px;
+  transform: scaleX(1.5) scale(0.6);
+}

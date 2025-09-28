@@ -107,7 +107,89 @@
         padding-bottom: 30px;
         padding-top: 20px;
     }
+    
+    .option label
+    {
+        width: 100% !important;
 
+    }
+
+    .option.slider
+    {
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-end !important;
+    }
+    
+    .option.slider label
+    {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    #settings input[type="range"]
+    {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        width: 100% !important;
+    }
+    
+    .page
+    {
+        padding: 20px;
+        padding-top: 30px;
+    }
+
+    .chats-remaining
+    {
+        display: none;
+    }
+
+    .home-buttons
+    {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .nav-bar:hover
+    {
+        width: 60px;
+    }
+
+    .nav-bar .chat-history-container,
+    .nav-bar .nav-bar-bottom {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .nav-bar.mobile-open .chat-history-container,
+    .nav-bar.mobile-open .nav-bar-bottom {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .nav-bar:hover .nav-text 
+    {
+        opacity: 0;
+    }
+
+    .nav-bar.mobile-open
+    {
+        width: 230px !important;
+    }
+
+    .nav-bar.mobile-open .nav-text
+    {
+        opacity: 1;
+    }
+
+    .nav-bar.mobile-open .chat-history
+    {
+        display: flex;
+    }
 
 }
 

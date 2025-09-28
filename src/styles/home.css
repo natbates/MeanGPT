@@ -4,7 +4,6 @@
 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     height: 100%;
 }
 
@@ -12,24 +11,120 @@
 {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     text-align: start;
     align-items: flex-start;
+    margin-top: 120px;
+}
+
+.home-buttons
+{
+    align-items: flex-end;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.bots-container
+{
+    width: 100%;
+}
+
+.home-text h1
+{
+    font-size: 3.6rem;
+    max-width: fit-content;
+}
+
+.home-text h2
+{
+    opacity: 0.7;
+    font-size: 1rem;
+}
+
+.dev-blog
+{
+    width: 100%;
+    text-align: end;
+    opacity: 0.7;
+    font-size: 0.8rem;
+    margin-top: 35px;
 }
 
 .share-button
 {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    font-size: 1rem;
+    color: white !important ;
+    outline: 1px solid white;
+    background-color: transparent !important;
 }
 
 .home-title
 {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+}
+
+.home-buttons p
+{
+    opacity: 0.6;
+}
+
+.mr-meanie
+{
+    width: 56px;
+    height: 56px;
+}
+
+.mr-meanie-insult.reverse
+{
+    flex-direction: row;
+}
+
+.mr-meanie-insult.reverse .insult-box::after
+{
+    left: -13px;
+    border-top: none;
+    border-left: none;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+
+}
+
+.mr-meanie-insult
+{
+    display: flex;
+    gap: 30px;
+    flex-direction: row-reverse;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.insult-box
+{
+    outline: 2px solid rgba(255, 255, 255, 0.654);
+    width: 100%;
+    max-width: 500px;
+    height: fit-content;
+    min-height: 100px;
+    padding: 10px;
+    position: relative;
+    background-color: black;
+}
+
+.insult-box::after {
+    content: "";
+    position: absolute;
+    background-color: black; /* inner color */
+    color: white; /* text color */
+    width: 24px;
+    height: 24px;
+    right: -13px;
+    top: 20px;
+    transform: rotate(135deg);
+    /* Outline only on top and left */
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+
 }
 
 .home-text button

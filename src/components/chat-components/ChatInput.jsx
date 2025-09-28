@@ -1,12 +1,13 @@
 import { useState, forwardRef, useImperativeHandle, useRef, useContext, useEffect } from "react";
 import { ChatContext } from "../../contexts/ChatContext";
 import "../../styles/chat.css";
+import { maxAmountOfChats, maxAmountOfReplies } from "../../utils/default";
 
-const ChatInput = forwardRef(({ isBotOnline }, ref) => {
+const ChatInput = forwardRef(({ isBotOnline, firstMessageForUnselected}, ref) => {
     const [input, setInput] = useState("");
     const inputRef = useRef(null);
 
-    const { activeChat, addMessageToActiveChat, botThinking, createNewChat } =
+    const { chats, activeChat, addMessageToActiveChat, botThinking, createNewChat } =
         useContext(ChatContext);
 
     useImperativeHandle(ref, () => ({
@@ -24,22 +25,19 @@ const ChatInput = forwardRef(({ isBotOnline }, ref) => {
         }
     }, [input]);
 
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
+    const handleSend = () => {
+        if (!input.trim()) return;
 
-            const isBotThinking =
-                activeChat && botThinking.includes(activeChat.id);
+        const isBotThinking =
+            activeChat && botThinking.includes(activeChat.id);
 
-            // Only allow sending if bot is online and not thinking
-            if (!isBotThinking && isBotOnline && input.trim() !== "") {
-                if (!activeChat) {
-                    createNewChat("Hey there! How can I assist you today?", input.trim());
-                } else {
-                    addMessageToActiveChat(input.trim());
-                }
-                setInput("");
+        if (!isBotThinking && isBotOnline) {
+            if (!activeChat) {
+            createNewChat(firstMessageForUnselected, input.trim());
+            } else {
+            addMessageToActiveChat(input.trim());
             }
+            setInput("");
         }
     };
 
@@ -51,27 +49,44 @@ const ChatInput = forwardRef(({ isBotOnline }, ref) => {
             inputRef.current?.focus();
         }
     }, [isBotThinkingInActiveChat, isBotOnline]);
+    
+
+    if (activeChat?.finished && !botThinking.includes(activeChat.id)) {return;}
+
+    if (!activeChat && chats.length >= maxAmountOfChats){return;}
 
     return (
-        <div id="chat-input">
+    <div id="chat-input">
+        <form
+            onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+            }}
+        >
             <textarea
-                ref={inputRef}
-                className="text-input"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
-                maxLength={255}
-                disabled={isBotThinkingInActiveChat || !isBotOnline}
-                placeholder={
-                    !isBotOnline
-                        ? "Bot is offline..."
-                        : isBotThinkingInActiveChat
-                        ? "Bot is thinking..."
-                        : "Type your message... "
+            ref={inputRef}
+            className="text-input"
+            type="text"
+            value={isBotThinkingInActiveChat ? "" : input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                e.preventDefault();
+                handleSend();
                 }
+            }}
+            maxLength={255}
+            disabled={isBotThinkingInActiveChat || !isBotOnline || activeChat?.finsihed}
+            placeholder={
+                !isBotOnline
+                ? "Bot is offline..."
+                : isBotThinkingInActiveChat
+                ? "Bot is thinking..."
+                : "Type your message..."
+            }
             />
-        </div>
+        </form>
+    </div>
     );
 });
 
