@@ -30,7 +30,7 @@ const navItems = (navigate, createNewChat, setMobileOpen) => [
     title: "Help",
     name: "Help",
     imgUrl: "/images/icons/help.png",
-    onClick: () => {e.stopPropagation(); setMobileOpen(false); navigate("/support")},
+    onClick: (e) => {e.stopPropagation(); setMobileOpen(false); navigate("/support")},
     path: "/support"
   }
 ];
