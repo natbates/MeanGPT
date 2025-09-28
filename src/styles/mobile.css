@@ -191,6 +191,11 @@
         display: flex;
     }
 
+    .home-text
+    {
+        margin-top: 20px;
+    }
+
 }
 
 
