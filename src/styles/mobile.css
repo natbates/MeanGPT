@@ -191,9 +191,19 @@
         display: flex;
     }
 
+    .mr-meanie-insult
+    {
+        margin-top: 30px;
+    }
+
     .home-text
     {
         margin-top: 20px;
+    }
+
+    .home-text h2
+    {
+        font-size: 0.8rem;
     }
 
 }

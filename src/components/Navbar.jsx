@@ -70,42 +70,42 @@ const NavBar = () => {
 
     return (
         <nav ref={navRef} className={`nav-bar ${mobileOpen ? "mobile-open" : ""}`} onClick={() => {setMobileOpen(true)}}>
-            <div className="nav-bar-top">
-                <div className="nav-items">
-                    <div className="nav-items-spacer">
-                    {navItems(navigate, createNewChat, setMobileOpen).map((item) => {
-                        const isActive = window.location.pathname === item.path; 
-                        return (
-                            <button
-                            key={item.key}
-                            className={`nav-button ${isActive ? "active" : ""}`}
-                            onClick={item.onClick}
-                            >
-                            <img
-                                src={item.imgUrl}
-                                alt={item.title}
-                                className="nav-icon"
-                            />
-                            <span className="nav-text">{item.name}</span>
-                            </button>
-                        );
-                    })}
-                    </div>   
+            
+            <div className="nav-content">
+                <div className="nav-bar-top">
+                    <div className="nav-items">
+                        <div className="nav-items-spacer">
+                        {navItems(navigate, createNewChat, setMobileOpen).map((item) => {
+                            const isActive = window.location.pathname === item.path; 
+                            return (
+                                <button
+                                key={item.key}
+                                className={`nav-button ${isActive ? "active" : ""}`}
+                                onClick={item.onClick}
+                                >
+                                <img
+                                    src={item.imgUrl}
+                                    alt={item.title}
+                                    className="nav-icon"
+                                />
+                                <span className="nav-text">{item.name}</span>
+                                </button>
+                            );
+                        })}
+                        </div>   
+                    </div>
+                    <ChatHistory mobileOpen={mobileOpen}/>
                 </div>
 
-                <ChatHistory mobileOpen={mobileOpen}/>
+                <div className="nav-bar-bottom">
+                    <span className="nav-text" onClick={() => navigate("/terms")}>TOC</span>
+                    <span className="nav-text" onClick={() => navigate("/settings")}>Settings</span>
+                    <span onClick={handleClearChats} className="nav-text">
+                        Clear Chats
+                    </span>
+                </div>
 
             </div>
-
-            <div className="nav-bar-bottom">
-                <span className="nav-text" onClick={() => navigate("/terms")}>TOC</span>
-                <span className="nav-text" onClick={() => navigate("/settings")}>Settings</span>
-                <span onClick={handleClearChats} className="nav-text">
-                    Clear Chats
-                </span>
-            </div>
-
-
         </nav>
     );
 };

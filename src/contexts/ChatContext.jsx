@@ -3,6 +3,7 @@ import { defaultOptions } from "../utils/default";
 
 import { maxAmountOfChats, maxAmountOfReplies } from "../utils/default";
 import { rudeIntros } from "../utils/default";
+import { v4 as uuidv4 } from "uuid";
 
 export const LOCAL_STORAGE_KEY = "meangpt_chats";
 export const LAST_ACTIVE_CHAT_KEY = "last_active_chat_id";
@@ -12,7 +13,7 @@ const getInitialChats = () => {
     return stored ? JSON.parse(stored) : [];
 };
 
-const generateId = () => crypto.randomUUID();
+const generateId = () => uuidv4();
 
 export const ChatContext = createContext();
 

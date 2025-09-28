@@ -23,7 +23,6 @@ export const defaultInsults = [
     "You're as sharp as a marble.",
     "I would agree with you but then we’d both be wrong.",
     "You're the human version of a typo.",
-    "Somewhere out there is a tree working hard to produce oxygen for you. You owe it.",
     "You're proof that even evolution takes a break sometimes."
 ];
 
@@ -34,10 +33,10 @@ export const defaultAdvice = [
     "Use me to practice comebacks, but I won’t go easy on you!",
     "If I freeze, refresh the page. I’ll be back in action.",
     "Mix humor with curiosity, and I’ll show you my full MeanGPT magic.",
-    "Want me meaner? Crank up the 'Mean Level' in settings — I bite harder with higher levels.",
-    "Make replies longer if you want a full-on roasting essay instead of a punchy one-liner.",
-    "Adjust my 'Creativity' slider — higher means wilder, more unpredictable comebacks.",
-    "Play with the 'Reply Speed' — slower for dramatic effect, faster if you want instant burns."
+    "Want me meaner? Crank up the 'Mean Level' in settings.",
+    "Make replies longer if you want a full-on roasting essay.",
+    "Adjust my 'Creativity' slider — higher means wilder comebacks.",
+    "Play with the 'Reply Speed' if you want instant burns."
 ];
 
 export const blogPosts = [
