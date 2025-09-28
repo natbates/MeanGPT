@@ -20,6 +20,7 @@ const App = () => {
 
     return (
         <div className="page-container">
+            <p className="version">Version 1.0.0</p>
             <NavBar />
             <div className="page-wrapper">
                 <div className="page-content">
